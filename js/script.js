@@ -1,25 +1,44 @@
 const sketchArea = document.getElementById("sketchArea");
+const btn = document.querySelector("button");
 
-// Create divs for sketch area
-for (let i = 0; i <= 16; i++) {
-  let squareRow = document.createElement("div");
-  squareRow.classList.add("flex-box");
-  sketchArea.appendChild(squareRow);
+btn.addEventListener('click', () => {
+  let amountOfSquares, acceptedAmount = false;
+  while (!acceptedAmount) {
+    amountOfSquares = prompt("How many squares (max 100)?", '16');
+    (amountOfSquares < 100) ? acceptedAmount = true : acceptedAmount = false;
+  }
+  emptyDrawArea();
+  drawArea(Number.parseInt(amountOfSquares))
+});
 
-  for (let j = 0; j <= 16; j++) {
-    let square = document.createElement("div");
-    square.classList.add("square");
-    square.style.height = `${35 / 16}rem`;
-    square.style.width = `${35 / 16}rem`;
-    squareRow.appendChild(square);
+function emptyDrawArea() {
+  while (sketchArea.firstChild) {
+    sketchArea.removeChild(sketchArea.firstChild);
   }
 }
 
-const divs = document.querySelectorAll(".square");
+
+// Create div for sketch area
+function drawArea(amountOfSquares = 16) {
+  for (let i = 1; i <= amountOfSquares; i++) {
+    let squareRow = document.createElement("div");
+    squareRow.classList.add("flex-box");
+    sketchArea.appendChild(squareRow);
+
+    for (let j = 1; j <= amountOfSquares; j++) {
+      let square = document.createElement("div");
+      square.classList.add("square");
+      square.style.height = `${35 / amountOfSquares}rem`;
+      square.style.width = `${35 / amountOfSquares}rem`;
+      squareRow.appendChild(square);
+    }
+  }
+  const divs = document.querySelectorAll(".square");
+  divs.forEach((div) => div.addEventListener("mouseenter", drawDiv));
+}
+drawArea(16);
 
 // DrawDiv changes bg color on divs
 function drawDiv() {
   this.classList.add("bg-black");
 }
-
-divs.forEach((div) => div.addEventListener("mouseenter", drawDiv));
