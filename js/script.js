@@ -1,5 +1,9 @@
 const sketchArea = document.getElementById("sketchArea");
 const btn = document.querySelector("button");
+// Drawing color is the first three numbers (RGB),
+// Starting color is the last three numbers. Used for calculating the percentage to 0 (black)
+let drawColor = [0, 0, 0, 0, 0, 0];
+
 
 btn.addEventListener('click', () => {
   let amountOfSquares, acceptedAmount = false;
@@ -15,6 +19,22 @@ function emptyDrawArea() {
   while (sketchArea.firstChild) {
     sketchArea.removeChild(sketchArea.firstChild);
   }
+}
+
+// Loop through 0 Red, 1 Green and 2 Blue and assign random number
+// Store color as "[i + 3]" for percentage calculating
+function randomColorSelector() {
+  for (let i = 0; i < 3; i++) {
+    drawColor[i] = Math.floor(Math.random() * 256);
+    drawColor[i + 3] = drawColor[i];
+  }
+}
+
+// Change color 10% towards black
+function fadeToBlack() {
+  drawColor[0] = (drawColor[0] > 0) ? drawColor[0] - Math.floor(drawColor[3] * 0.1) : 0;
+  drawColor[1] = (drawColor[1] > 0) ? drawColor[1] - Math.floor(drawColor[4] * 0.1) : 0;
+  drawColor[2] = (drawColor[2] > 0) ? drawColor[2] - Math.floor(drawColor[5] * 0.1) : 0;
 }
 
 
@@ -33,12 +53,15 @@ function drawArea(amountOfSquares = 16) {
       squareRow.appendChild(square);
     }
   }
+  randomColorSelector();
   const divs = document.querySelectorAll(".square");
   divs.forEach((div) => div.addEventListener("mouseenter", drawDiv));
 }
+
 drawArea(16);
 
 // DrawDiv changes bg color on divs
 function drawDiv() {
-  this.classList.add("bg-black");
+  this.style.backgroundColor = `rgb(${drawColor[0]}, ${drawColor[1]}, ${drawColor[2]})`;
+  fadeToBlack();
 }
